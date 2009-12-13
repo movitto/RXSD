@@ -1,0 +1,19 @@
+RXSD - XSD / Ruby Translator
+Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+See COPYING for the License of this software
+
+RXSD is a library that translates XSD XML Schema Definitions into Ruby Classes 
+on the fly. It is able to read XSD resources and use them to define Ruby 
+classes in memory or string class definitions to be written to the filesystem
+
+RXSD implements a full XSD parser that not only defines the various xsd schema
+classes, parsing them out of a XSD file, but translates them into a 
+meta-class heirarchy, for use in subsequent transformations. The builder interface
+can easily be extended to output any format one could want including classes
+in other languages (Python, C++, Java, etc), other XML formats, etc.
+
+RXSD also parses XML conforming to a XSD schema, and instantiates objects 
+corresponding to the XSD classes created. Furthermore, RXSD will work with
+existing class definitions resulting in a quick way to map XSD to Ruby constructs,
+letting you define the schema features that you need, and autogenerting handlers
+to the others.

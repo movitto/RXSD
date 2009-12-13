@@ -1,0 +1,13 @@
+RXSD is a work in progress and is not current stable.
+
+Various features left to be implemented
+
+  * LOTS of bug fixing (expanding the test suite in the process)
+  * Support for missing XSD constructs:
+     - all / annotation / any / anyAttribute / appInfo / documentation / field /
+       import / include / key / keyref / notation / redefine / selector / union / unique
+  * Make Builder interface more generic, w/ subclasses for ruby classes, defintions, whatever else
+  * Means to autocovert XSD conforming XML into instances of classes created 
+  * C/C++ rewrite (?)
+  * More design cleanup / doing things the "right" way 
+    (make things more plugable, including additional XML backend support)
