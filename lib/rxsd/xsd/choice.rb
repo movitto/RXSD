@@ -74,17 +74,17 @@ class Choice
           @class_builders.push e.to_class_builder
        }
        @groups.each { |g|
-          g.to_class_builders { |gcb|
+          g.to_class_builders.each { |gcb|
             @class_builders.push gcb
           }
        }
        @choices.each { |c|
-          c.to_class_builders { |ccb|
+          c.to_class_builders.each { |ccb|
             @class_builders.push ccb
           }
        }
        @sequences.each { |s|
-          s.to_class_builders { |scb|
+          s.to_class_builders.each { |scb|
             @class_builders.push scb
           }
        }

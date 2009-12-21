@@ -26,7 +26,7 @@ class Group
 
   # return xsd node info
   def info
-    "group id: #{@id} name: #{@name} ref: #{ref.nil? ? "" : ref.name} "
+    "group id: #{@id} name: #{@name} ref: #{ref.nil? ? "" : ref.class == String ? ref : ref.name} "
   end
 
   # returns array of all children

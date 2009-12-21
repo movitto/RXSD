@@ -5,6 +5,11 @@
 # Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
+# include whatever output builders you want here,
+require 'builders/ruby_class'
+require 'builders/ruby_definition'
+require 'builders/ruby_object'
+
 module RXSD
 
 # Extend XSD Schema Interface to
@@ -12,20 +17,42 @@ module RXSD
 module XSD
 class Schema
 
+   # helper method, return hash of all tag names -> class builders under schema.
+   # An tag is an element or attribute name that can appear in a xml document
+   # conforming to the schema
+   def tags
+        tags = {}
+        Resolver.node_objects(self).
+                 find_all { |no| no.class == Element || no.class == Attribute }.
+                 each     { |no| tags[no.name] = no.to_class_builder }
+        return tags
+   end
+
+   # helper method, return all class builders in/under schema
+   def all_class_builders
+        to_class_builders.collect { |cb| cb.associated.push cb }.flatten # FIXME filter duplicates
+   end
+
    # translates schema and all child entities to instances of specified output type.
    # output_type may be one of
    #   * :ruby_classes
    #   * :ruby_definitions
    def to(output_type)
-      cbs = to_class_builders.collect { |cb| cb.associated.push cb }.flatten # FIXME filter duplicates
+      cbs = all_class_builders
       results = []
       cbs.each { |cb|
+        # probably a better way to do this at some point than invoking the copy constructors
+        #
+        # FIXME we create class builders in the translator on the fly, this may cause
+        # problems for later operations that need to access class builder attributes which
+        # have been created
         case(output_type)
          when :ruby_classes
-            cl = cb.build_class
+            cl = RubyClassBuilder.new(:builder => cb).build
             results.push cl unless results.include? cl
+            cb.klass = cl # small hack to get around the above fixme... for now
          when :ruby_definitions
-            df = cb.build_definition
+            df = RubyDefinitionBuilder.new(:builder => cb).build
             results.push df unless results.include? df
         end
       }
@@ -35,4 +62,52 @@ class Schema
 end # class Schema
 
 end # module XSD
+
+# SchemaInstance contains an array of ObjectBuilders and provides
+# mechanism to instantiate objects from conforming to a xsd schema
+class SchemaInstance
+
+  # array of object builders represented by current instance
+  attr_accessor :object_builders
+
+  # return array of ObjectBuilders parsed out of a RXSD::XML::Node.
+  # Optionally specify parent ObjectBuilder to use
+  def self.builders_from_xml(node, parent = nil)
+     node_builder = ObjectBuilder.new(:tag_name => node.name.classify, :attributes => node.attrs, :parent => parent)
+     builders = [ node_builder ]
+     node.children.each { |c|
+        unless c.text?
+          builders += SchemaInstance.builders_from_xml(c, node_builder )
+        else
+          node_builder.content = c.content
+        end
+     }
+     return builders
+  end
+
+  # create new schema instance w/ specified args
+  def initialize(args = {})
+    @object_builders = args[:builders] if args.has_key? :builders
+  end
+
+  # translates SchemaInstance's objects into instances of the specified output type.
+  # :output_type may be one of
+  #   * :ruby_objects
+  # Must specify :schema argument containing RXSD::XSD::Schema to use in object creation
+  def to(output_type, args = {})
+    schema = args[:schema]
+    results = []
+    @object_builders.each { |ob|
+       # probably a better way to do this at some point than invoking the copy constructors
+       case(output_type)
+          when :ruby_objects
+            ob = RubyObjectBuilder.new(:builder => ob).build(schema)
+            results.push ob
+       end
+    }
+    return results
+  end
+
+end
+
 end # module RXSD

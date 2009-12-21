@@ -5,11 +5,14 @@
 
 lib = File.dirname(__FILE__)
 
-require 'rubygems'
-require 'motel'
+$: << lib + '/rxsd/'
 
+require 'rubygems'
+
+require lib + '/rxsd/exceptions'
 require lib + '/rxsd/common'
-require lib + '/rxsd/libxml'
+require lib + '/rxsd/builtin_types'
+require lib + '/rxsd/xml'
 require lib + '/rxsd/loader'
 require lib + '/rxsd/resolver'
 require lib + '/rxsd/parser'

@@ -22,9 +22,6 @@ class ParserTest < Test::Unit::TestCase
      assert_equal Boolean, schema.complex_types[0].choice.elements[0].ref.type
   end
 
-  def test_parse_xml
-  end
-
   def test_is_builtin_type
      assert Parser.is_builtin?(String)
      assert Parser.is_builtin?(Boolean)
@@ -44,7 +41,7 @@ class ParserTest < Test::Unit::TestCase
      data = "<schema version='4.20' targetNamespace='foobar' xmlns='http://www.w3.org/2001/XMLSchema' xmlns:foo='http://morsi.org/myschema' " +
             "   elementFormDefault='qualified' attributeFormDefault='unqualified' />"
      doc  = LibXML::XML::Document.string data
-     schema = Schema.from_xml(doc.root)
+     schema = Schema.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root))
      assert_equal 2, schema.namespaces.size
      assert_equal 'foobar', schema.targetNamespace
      assert_equal 'http://www.w3.org/2001/XMLSchema', schema.namespaces[nil]
@@ -54,13 +51,13 @@ class ParserTest < Test::Unit::TestCase
 
      data = "<schema><element id='foo'/></schema>"
      doc  = LibXML::XML::Document.string data
-     schema = Schema.from_xml(doc.root)
+     schema = Schema.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root))
      assert_equal 1, schema.elements.size
      assert_equal "foo", schema.elements[0].id
 
      data = "<schema xmlns:xs='http://www.w3.org/2001/XMLSchema'><xs:element id='foo'/></schema>"
      doc  = LibXML::XML::Document.string data
-     schema = Schema.from_xml(doc.root)
+     schema = Schema.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root))
      assert_equal 1, schema.elements.size
      assert_equal "foo", schema.elements[0].id
   end
@@ -71,7 +68,7 @@ class ParserTest < Test::Unit::TestCase
                  ' nillable="true" abstract="true" ref="Foo" form="qualified" />' +
             '</s>'
      doc  = LibXML::XML::Document.string data
-     element = Element.from_xml(doc.root.children[0])
+     element = Element.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "iii", element.id
      assert_equal "xxx", element.name
      assert_equal "yyy", element.type
@@ -89,7 +86,7 @@ class ParserTest < Test::Unit::TestCase
                 '</xs:element>' +
              '</s>'
      doc  = LibXML::XML::Document.string data
-     element = Element.from_xml(doc.root.children[0])
+     element = Element.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal nil, element.default
      assert_equal "unbounded", element.minOccurs
 
@@ -97,7 +94,7 @@ class ParserTest < Test::Unit::TestCase
                 '<xs:element id="iii" ref="Foo" />'+
              '</schema>'
      doc  = LibXML::XML::Document.string data
-     element = Element.from_xml(doc.root.children[0])
+     element = Element.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "iii", element.id
      assert_equal nil, element.ref
      assert_equal "unqualified", element.form
@@ -108,7 +105,7 @@ class ParserTest < Test::Unit::TestCase
               '</xs:element>'+
              '</s>'
      doc  = LibXML::XML::Document.string data
-     element = Element.from_xml(doc.root.children[0])
+     element = Element.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "Foobar", element.default
      assert_equal "foobar", element.simple_type.id
   end
@@ -122,7 +119,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     complexType = ComplexType.from_xml(doc.root.children[0])
+     complexType = ComplexType.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "iii", complexType.id
      assert_equal "xxx", complexType.name
      assert_equal true, complexType.abstract
@@ -138,7 +135,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     complexType = ComplexType.from_xml(doc.root.children[0])
+     complexType = ComplexType.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal false, complexType.mixed
      assert_equal "123", complexType.simple_content.id
   end
@@ -151,7 +148,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:simpleType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     simpleType = SimpleType.from_xml(doc.root.children[0])
+     simpleType = SimpleType.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "iii", simpleType.id
      assert_equal "xxx", simpleType.name
      assert_equal "rs1", simpleType.restriction.id
@@ -163,7 +160,7 @@ class ParserTest < Test::Unit::TestCase
                '<xs:attribute id="at1" name="at1" use="optional" form="qualified" default="123" type="foo" />' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     attr = Attribute.from_xml(doc.root.children[0])
+     attr = Attribute.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "at1", attr.id
      assert_equal "at1", attr.name
      assert_equal "qualified", attr.form
@@ -177,7 +174,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:attribute>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     attr = Attribute.from_xml(doc.root.children[0])
+     attr = Attribute.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "at2", attr.id
      assert_equal "unqualified", attr.form
      assert_equal nil, attr.type
@@ -194,7 +191,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:attributeGroup>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     attrGroup = AttributeGroup.from_xml(doc.root.children[0])
+     attrGroup = AttributeGroup.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "ag1", attrGroup.id
      assert_equal "ag1", attrGroup.name
      assert_equal "ag2", attrGroup.ref
@@ -212,7 +209,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:group>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     group = Group.from_xml(doc.root.children[0])
+     group = Group.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "g1", group.id
      assert_equal "g1", group.name
      assert_equal 5, group.maxOccurs
@@ -225,7 +222,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:group>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     group = Group.from_xml(doc.root.children[0])
+     group = Group.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0]))
      assert_equal "g1", group.ref
      assert_equal 1, group.minOccurs
      assert_equal 1, group.maxOccurs
@@ -241,7 +238,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:simpleType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     list = List.from_xml(doc.root.children[0].children[0])
+     list = List.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0]))
      assert_equal "li1", list.id
      assert_equal nil, list.itemType
      assert_equal "st2", list.simple_type.id
@@ -252,7 +249,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:simpleType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     list = List.from_xml(doc.root.children[0].children[0])
+     list = List.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0]))
      assert_equal "Foo", list.itemType
   end
 
@@ -265,7 +262,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     simple_content = SimpleContent.from_xml(doc.root.children[0].children[0])
+     simple_content = SimpleContent.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0]))
      assert_equal "sc1", simple_content.id
      assert_equal "r1", simple_content.restriction.id
   end
@@ -283,7 +280,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     choice = Choice.from_xml(doc.root.children[0].children[0])
+     choice = Choice.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0]))
      assert_equal "c1", choice.id
      assert_equal 5, choice.maxOccurs
      assert_equal "unbounded", choice.minOccurs
@@ -300,7 +297,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     choice = Choice.from_xml(doc.root.children[0].children[0])
+     choice = Choice.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0]))
      assert_equal 1, choice.maxOccurs
      assert_equal 1, choice.minOccurs
      assert_equal 1, choice.sequences.size
@@ -316,7 +313,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     complexContent = ComplexContent.from_xml(doc.root.children[0].children[0])
+     complexContent = ComplexContent.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0]))
      assert_equal "cc1", complexContent.id
      assert_equal true, complexContent.mixed
      assert_equal "r1", complexContent.restriction.id
@@ -335,7 +332,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     seq = Sequence.from_xml(doc.root.children[0].children[0])
+     seq = Sequence.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0]))
      assert_equal "s1", seq.id
      assert_equal 5, seq.maxOccurs
      assert_equal "unbounded", seq.minOccurs
@@ -358,7 +355,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     ext = Extension.from_xml(doc.root.children[0].children[0].children[0])
+     ext = Extension.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0].children[0]))
      assert_equal "e1", ext.id
      assert_equal "Foo", ext.base
      assert_equal "g1", ext.group.id
@@ -379,7 +376,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     res = Restriction.from_xml(doc.root.children[0].children[0].children[0])
+     res = Restriction.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0].children[0]))
      assert_equal "r1", res.id
      assert_equal "xs:integer", res.base
      assert_equal 2, res.attribute_groups.size
@@ -401,7 +398,7 @@ class ParserTest < Test::Unit::TestCase
                '</xs:complexType>' +
             '</schema>'
      doc  = LibXML::XML::Document.string data
-     res = Restriction.from_xml(doc.root.children[0].children[0].children[0])
+     res = Restriction.from_xml(RXSD::XML::LibXMLNode.new(:node => doc.root.children[0].children[0].children[0]))
      assert_equal 2, res.attribute_groups.size
      assert_equal 5, res.min_length
      assert_equal 15, res.max_exclusive
@@ -409,4 +406,42 @@ class ParserTest < Test::Unit::TestCase
      assert_equal 2, res.enumerations.size
      assert_equal "foo", res.enumerations[0]
   end
+
+
+  ##########################################################
+
+  def test_parse_xml
+     data = "<root_tag some_string='foo' MyInt='bar' >" +
+             "<child_tag>" +
+              "<grandchild_tag id='25' />" +
+             "</child_tag>" +
+            "</root_tag>"
+
+     schema_instance = Parser.parse_xml :raw => data
+     assert_equal 3, schema_instance.object_builders.size
+     rt = schema_instance.object_builders.find { |ob| ob.tag_name == "RootTag" }
+     ct = schema_instance.object_builders.find { |ob| ob.tag_name == "ChildTag" }
+     gt = schema_instance.object_builders.find { |ob| ob.tag_name == "GrandchildTag" }
+
+     assert !rt.nil?
+     assert !ct.nil?
+     assert !gt.nil?
+
+     assert_equal 1, rt.children.size
+     assert_equal ct, rt.children[0]
+
+     assert_equal 1, ct.children.size
+     assert_equal gt, ct.children[0]
+
+     assert_equal 2, rt.attributes.size
+     assert rt.attributes.has_key?("some_string")
+     assert_equal "foo", rt.attributes["some_string"]
+     assert rt.attributes.has_key?("MyInt")
+     assert_equal "bar", rt.attributes["MyInt"]
+
+     assert_equal 0, gt.children.size
+     assert gt.attributes.has_key?("id")
+     assert_equal "25", gt.attributes["id"]
+  end
+
 end

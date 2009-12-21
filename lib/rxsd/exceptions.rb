@@ -5,6 +5,15 @@
 
 require 'uri' # use uri to parse sources
 
+# add virtual method support
+class VirtualMethodCalledError < RuntimeError
+  attr :name
+  def initialize(name)
+    super("Virtual function '#{name}' called")
+    @name = name
+  end
+end
+
 module RXSD
 module Exceptions
 

@@ -32,7 +32,7 @@ class Element
 
   # return xsd node info
   def info
-    "element id: #{@id} name: #{@name} type: #{@type.class} ref: #{ref.nil? ? "" : ref.name} "
+    "element id: #{@id} name: #{@name} type: #{@type.class} ref: #{ref.nil? ? "" : ref.class == String ? ref : ref.name} "
   end
 
   # returns array of all children
@@ -62,7 +62,8 @@ class Element
        element.ref              = node.attrs["ref"]
        element.substitionGroup  = node.attrs["substitionGroup"]
        element.form             = node.attrs.has_key?("form") ? 
-                                     node.attrs["form"] : node.root.attrs["elementFormDefault"]
+                                     node.attrs["form"] :
+                                      node.root.attrs["elementFormDefault"]
 
        element.maxOccurs  = node.attrs.has_key?("maxOccurs") ? 
                                 (node.attrs["maxOccurs"] == "unbounded" ? "unbounded" : node.attrs["maxOccurs"].to_i) : 1
@@ -124,7 +125,7 @@ class Element
 
        end
 
-       @class_builder.klass_name = @name unless @class_builder.nil?
+       @class_builder.klass_name = @name.camelize unless @class_builder.nil? || @name == "" || @name.nil?
      end
 
      return @class_builder

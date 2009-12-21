@@ -26,7 +26,7 @@ class Extension
 
   # return xsd node info
   def info
-    "extension id: #{@id} base: #{@base.nil? ? "" : Parser.is_builtin?(@base) ? @base : @base.name }"
+    "extension id: #{@id} base: #{@base.nil? ? "" : (@base.class == String || Parser.is_builtin?(@base)) ? @base : @base.name }"
   end
 
   # returns array of all children

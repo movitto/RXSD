@@ -96,19 +96,19 @@ class ComplexType
       }
 
       if !@group.nil?
-          @group.to_class_builders { |gcb|
+          @group.to_class_builders.each { |gcb|
             @class_builder.attribute_builders.push gcb
           }
       end
    
       if !@choice.nil?
-          @choice.to_class_builders { |ccb|
+          @choice.to_class_builders.each { |ccb|
             @class_builder.attribute_builders.push ccb
           }
       end
 
       if !@sequence.nil?
-          @sequence.to_class_builders { |scb|
+          @sequence.to_class_builders.each { |scb|
             @class_builder.attribute_builders.push scb
           }
       end

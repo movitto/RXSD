@@ -13,7 +13,7 @@ class Parser
 
  public
 
-  # parse xsd specified by uri or in raw data form
+  # parse xsd specified by uri or in raw data form into RXSD::XSD::Schema instance
   # args should be a hash w/ optional keys:
   #   * :uri location which to load resource from
   #   * :raw raw data which to parse
@@ -23,8 +23,8 @@ class Parser
      Logger.debug "parsing following xsd: #{data}" 
 
      # FIXME validate against xsd's own xsd
-     doc = LibXML::XML::Document.string data
-     schema = XSD::Schema.from_xml doc.root
+     root_xml_node = XML::Node.factory :backend => :libxml, :xml => data
+     schema = XSD::Schema.from_xml root_xml_node
 
      Logger.debug "parsed xsd, resolving relationships"
      Resolver.resolve_nodes schema
@@ -33,7 +33,17 @@ class Parser
      return schema
   end
 
-  def parse_xml(xml, xsd)
+  # parse xml specified by uri or in raw data form into RXSD::XSD::SchemaInstance instance
+  def self.parse_xml(args)
+     data = Loader.load(args[:uri]) unless args[:uri].nil?
+     data = args[:raw]              unless args[:raw].nil?
+     Logger.debug "parsing following xml: #{data}"
+
+     root_xml_node = XML::Node.factory :backend => :libxml, :xml => data
+     schema_instance = SchemaInstance.new :builders => SchemaInstance.builders_from_xml(root_xml_node)
+
+     Logger.debug "xml parsing complete"
+     return schema_instance
   end
 
   # return true is specified class is builtin, else false

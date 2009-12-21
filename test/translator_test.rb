@@ -20,13 +20,28 @@ class TranslatorTest < Test::Unit::TestCase
                     '</xs:extension>' +
                  '</xs:complexContent>' +
                '</xs:complexType>' +
-               '<xs:element name="Foobar" type="MyStrType"/>' +
+               '<xs:element name="Kaboom" type="MyStrType"/>' +
                '<xs:element name="Foomanchu" type="xs:boolean"/>' +
                '<xs:element name="MoMoney" type="MyType"/>' +
             '</schema>'
   end
 
   def teardown
+  end
+
+  def test_schema_tags
+     schema = Parser.parse_xsd :raw => @data
+     tags = schema.tags
+     assert_equal 5, tags.size
+     assert tags.has_key?("Kaboom")
+     assert tags.has_key?("Foomanchu")
+     assert tags.has_key?("MoMoney")
+     assert tags.has_key?("my_s")
+     assert tags.has_key?("my_a")
+     assert !tags["Kaboom"].nil?
+  end
+
+  def test_schema_all_builders
   end
 
   def test_to_classes
@@ -37,7 +52,7 @@ class TranslatorTest < Test::Unit::TestCase
      assert classes.include?(Array)
      assert classes.include?(String)
      assert classes.include?(Boolean)
-     assert classes.include?(Foobar)
+     assert classes.include?(Kaboom)
      assert classes.include?(MoMoney)
      momoney = MoMoney.new
      assert !momoney.method(:my_s).nil?
@@ -54,10 +69,35 @@ class TranslatorTest < Test::Unit::TestCase
      assert classes.include?("class Array\nend")
      assert classes.include?("class String\nend")
      assert classes.include?("class Boolean\nend")
-     assert classes.include?("class Foobar < String\nend")
+     assert classes.include?("class Kaboom < String\nend")
      assert classes.include?("class MoMoney < String\n" +
                                "attr_accessor :my_s\n" +
                                "attr_accessor :my_a\n" +
                              "end")
+  end
+
+  def test_to_objects
+     schema = Parser.parse_xsd :raw => @data
+     classes = schema.to :ruby_classes
+
+     instance = '<Kaboom>yo</Kaboom>'
+     schema_instance = Parser.parse_xml :raw => instance
+     objs = schema_instance.to :ruby_objects, :schema => schema
+     assert_equal 1, objs.size
+     assert objs.collect { |o| o.class }.include?(Kaboom)
+     assert_equal "yo",  objs.find { |o| o.class == Kaboom }
+
+     instance = '<Foomanchu>true</Foomanchu>'
+     schema_instance = Parser.parse_xml :raw => instance
+     objs = schema_instance.to :ruby_objects, :schema => schema
+     assert_equal 1, objs.size
+     assert_equal true,  objs[0]
+
+     instance = '<MoMoney my_s="abc" />'
+     schema_instance = Parser.parse_xml :raw => instance
+     objs = schema_instance.to :ruby_objects, :schema => schema
+     assert_equal 1, objs.size
+     assert objs.collect { |o| o.class }.include?(MoMoney)
+     assert_equal "abc",  objs.find { |o| o.class == MoMoney }.my_s
   end
 end

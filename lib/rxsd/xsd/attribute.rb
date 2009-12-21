@@ -95,7 +95,7 @@ class Attribute
 
        end
 
-       @class_builder.attribute_name = @name unless @class_builder.nil?
+       @class_builder.attribute_name = @name unless @class_builder.nil? || @name == "" || @name.nil?
      end
 
      return @class_builder

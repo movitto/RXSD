@@ -4,7 +4,7 @@
 # See COPYING for the License of this software
 
 # we make use of the activesupport inflector
-#require 'active_support'
+require 'active_support'
 
 # logger support
 require 'logger'
@@ -34,6 +34,24 @@ module RXSD
     end
 end
 
+class Module
+  # add virtual method support
+  def virtual(*methods)
+    methods.each do |m|
+      define_method(m) {
+        raise VirtualMethodCalledError, m
+      }
+    end
+  end
+
+  # add helper method to define a class method on any class
+  def class_method(method_name, &block)
+    (class << self; self; end).instance_eval do
+      define_method method_name, block
+    end
+  end
+end
+
 # read entire file into string
 def File.read_all(path)
   File.open(path, 'rb') {|file| return file.read }
@@ -43,23 +61,3 @@ end
 def File.write(path, str)
   File.open(path, 'wb') {|file| file.write str }
 end
-
-# convert string to boolean
-class String
-  def to_b
-    return true if self == true || self =~ /^true$/i
-    return false if self == false || self.nil? || self =~ /^false$/i
-    raise ArgumentError.new("invalid value for Boolean: \"#{self}\"")
-  end
-end
-
-# ruby doesn't define Boolean class, so we do
-# dispatching to TrueClass / FalseClass
-class Boolean
-end
-
-# ruby doesn't define Char class, so we do
-# dispatching to simple string
-class Char
-end
-

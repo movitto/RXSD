@@ -11,6 +11,7 @@ require File.dirname(__FILE__) + '/../lib/rxsd'
 include RXSD
 include RXSD::XSD
 
+require 'test/types_test'
 require 'test/loader_test'
 require 'test/parser_test'
 require 'test/resolver_test'
