@@ -50,27 +50,41 @@ class ClassBuilder
         @attribute_builders = []
 
       end
+   end
 
+   # perform a deep copy of builder, takes optional recursive guard
+   def clone(cloned = {})
+      return cloned[self] if cloned.has_key? self
+
+      cb = ClassBuilder.new
+      cloned[self]          = cb
+      cb.klass              = @klass
+      cb.klass_name         = @klass_name
+      cb.attribute_name     = @attribute_name
+      cb.associated_builder = @associated_builder.clone(cloned) unless @associated_builder.nil?
+      cb.base_builder       = @base_builder.clone(cloned) unless @base_builder.nil?
+      @attribute_builders.each { |ab|
+         cb.attribute_builders.push ab.clone(cloned) unless ab.nil?
+      }
+      return cb
    end
 
    # helper method to get all associated class builders
-   def associated
-       builders = []
-
+   def associated(builders = [])
        unless @base_builder.nil? || builders.include?(@base_builder)
          builders.push @base_builder
-         builders += @base_builder.associated
+         builders = @base_builder.associated(builders)
        end
 
        unless @associated_builder.nil? || builders.include?(@associated_builder)
          builders.push @associated_builder
-         builders += @associated_builder.associated
+         builders = @associated_builder.associated(builders)
        end
 
        @attribute_builders.each { |ab|
          unless ab.nil? || builders.include?(ab)
            builders.push ab
-           builders += ab.associated
+           builders = ab.associated(builders)
          end
        }
 
@@ -122,7 +136,7 @@ class ObjectBuilder
 
       @children = [] if @children.nil?
       @attributes = [] if @attributes.nil?
-      @parent.children.push self unless @parent.nil?
+      #@parent.children.push self unless @parent.nil? || @parent.children.include?(self)
    end
 
    # subclasses must implement build method to

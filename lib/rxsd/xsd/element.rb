@@ -112,7 +112,7 @@ class Element
 
        elsif !@type.nil?
           if @type.class == SimpleType || @type.class == ComplexType
-            @class_builder = @type.to_class_builder
+            @class_builder = @type.to_class_builder.clone # need to clone here as we're refering to a type that may be used elsewhere
           else
             @class_builder = ClassBuilder.new :klass => @type
           end
@@ -130,6 +130,20 @@ class Element
 
      return @class_builder
   end
+
+  # return all child attributes associated w/ element
+  def child_attributes
+     if !@ref.nil?
+        return @ref.child_attributes
+     elsif[SimpleType, ComplexType].include? @type.class
+        return @type.child_attributes
+     elsif !@simple_type.nil?
+        return @simple_type.child_attributes
+     elsif !@complex_type.nil?
+        return @complex_type.child_attributes
+     end
+  end
+
 
 end
 

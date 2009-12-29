@@ -76,6 +76,14 @@ class AttributeGroup
     return @class_builders
   end
 
+  # return all child attributes associated w/ attribute group
+  def child_attributes
+     atts = []
+     @attribute_groups.each { |atg| atts += atg.child_attributes } unless @attribute_groups.nil?
+     @attributes.each { |att| atts.push att } unless @attributes.nil?
+     return atts
+  end
+
 end
 
 end # module XSD

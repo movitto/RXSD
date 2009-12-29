@@ -17,9 +17,6 @@ class Choice
   attr_accessor :elements, :groups, :choices, :sequences
 
   # choice parent
-  attr_accessor :choice
-
-  # choice parent
   attr_accessor :parent
 
   # xml tag name
@@ -91,6 +88,19 @@ class Choice
      end
 
      return @class_builders
+  end
+
+  # return all child attributes assocaited w/ choice
+  def child_attributes
+     atts = []
+     @elements.each  { |elem|
+         eca = elem.child_attributes
+         atts += eca unless eca.nil?
+     }  unless @elements.nil?
+     @sequences.each { |seq| atts += seq.child_attributes }    unless @sequences.nil?
+     @choices.each   { |ch| atts += ch.child_attributes }      unless @choices.nil?
+     @groups.each    { |gr| atts += gr.child_attributes }      unless @groups.nil?
+     return atts
   end
 
 end

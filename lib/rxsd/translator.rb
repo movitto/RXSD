@@ -22,15 +22,26 @@ class Schema
    # conforming to the schema
    def tags
         tags = {}
-        Resolver.node_objects(self).
-                 find_all { |no| no.class == Element || no.class == Attribute }.
-                 each     { |no| tags[no.name] = no.to_class_builder }
+        Resolver.
+          node_objects(self).
+          find_all { |no| no.class == Element }.
+          each     { |elem|
+            unless elem.name.nil?
+              tags[elem.name] = elem.to_class_builder
+              eca = elem.child_attributes
+              eca.each { |att|
+                tags[elem.name + ":" + att.name] = att.to_class_builder # prepend element to attribute name to prevent conflicts
+              } unless eca.nil?
+            end
+          }
         return tags
    end
 
    # helper method, return all class builders in/under schema
    def all_class_builders
-        to_class_builders.collect { |cb| cb.associated.push cb }.flatten # FIXME filter duplicates
+        to_class_builders.collect { |cb| cb.associated.push cb }.flatten.uniq.compact # FIXME this only filters duplicates by obj id,
+                                                                                      # its possible we have multiple objects refering
+                                                                                      # to the same type, should filter these out here or sometime b4
    end
 
    # translates schema and all child entities to instances of specified output type.
@@ -73,13 +84,13 @@ class SchemaInstance
   # return array of ObjectBuilders parsed out of a RXSD::XML::Node.
   # Optionally specify parent ObjectBuilder to use
   def self.builders_from_xml(node, parent = nil)
-     node_builder = ObjectBuilder.new(:tag_name => node.name.classify, :attributes => node.attrs, :parent => parent)
+     node_builder = ObjectBuilder.new(:tag_name => node.name, :attributes => node.attrs, :parent => parent)
      builders = [ node_builder ]
      node.children.each { |c|
-        unless c.text?
-          builders += SchemaInstance.builders_from_xml(c, node_builder )
+        if c.text?
+          node_builder.content = c.content  if node.children.size == 1 # FIXME if text/children-elements be mixed under a node this wont work
         else
-          node_builder.content = c.content
+          builders += SchemaInstance.builders_from_xml(c, node_builder )
         end
      }
      return builders

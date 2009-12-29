@@ -85,7 +85,7 @@ class Attribute
 
        elsif !@type.nil?
           if @type.class == SimpleType
-            @class_builder = @type.to_class_builder
+            @class_builder = @type.to_class_builder.clone # need to clone here as we're refering to a type that may be used elsewhere
           else
             @class_builder = ClassBuilder.new :klass => @type
           end
@@ -95,7 +95,10 @@ class Attribute
 
        end
 
-       @class_builder.attribute_name = @name unless @class_builder.nil? || @name == "" || @name.nil?
+       unless @class_builder.nil? || @name == "" || @name.nil?
+          @class_builder.attribute_name = @name
+          @class_builder.klass_name = @name.camelize if @class_builder.klass.nil? && @class_builder.klass_name.nil?
+       end
      end
 
      return @class_builder

@@ -86,6 +86,15 @@ class SimpleType
     return @class_builder
   end
 
+  # return all child_attributes associated w/ simple type
+  def child_attributes
+     if !@list.nil?
+        return @list.child_attributes
+     elsif !@restriction.nil?
+        return @restriction.child_attributes
+     end
+  end
+
 end
 
 end # module XSD

@@ -89,6 +89,19 @@ class Sequence
 
      return @class_builders
   end
+
+  # return all child attributes assocaited w/ choice
+  def child_attributes
+     atts = []
+     @elements.each  { |elem|
+         ca = elem.child_attributes
+         atts += ca unless ca.nil?
+     }  unless @elements.nil?
+     @sequences.each { |seq| atts += seq.child_attributes }    unless @sequences.nil?
+     @choices.each   { |ch| atts += ch.child_attributes }      unless @choices.nil?
+     @groups.each    { |gr| atts += gr.child_attributes }      unless @groups.nil?
+     return atts
+  end
 end
 
 end # module XSD

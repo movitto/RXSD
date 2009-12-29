@@ -85,6 +85,16 @@ class List
      return @class_builder
   end
 
+
+  # return all child_attributes associated w/ simple type
+  def child_attributes
+    if !@itemType.nil? && @itemType.class == SimpleType
+       return @itemType.child_attributes
+    elsif !@simple_type.nil?
+       return @simple_type.child_attributes
+    end
+  end
+
 end
 
 end # module XSD

@@ -86,6 +86,14 @@ class Group
     return @class_builder
   end
 
+    # return all child attributes assocaited w/ group
+    def child_attributes
+       atts = []
+       atts += @sequence.child_attributes  unless @sequence.nil?
+       atts += @choice.child_attributes    unless @choice.nil?
+       return atts
+    end
+
 end
 
 end # module XSD

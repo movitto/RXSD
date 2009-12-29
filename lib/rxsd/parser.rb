@@ -48,7 +48,7 @@ class Parser
 
   # return true is specified class is builtin, else false
   def self.is_builtin?(builtin_class)
-    [Array, String, Boolean, Char, Float, Integer].include? builtin_class
+    [Array, String, Boolean, Char, XSDFloat, XSDInteger].include? builtin_class
   end
 
   # return ruby class corresponding to builting type
@@ -61,11 +61,11 @@ class Parser
       when "xs:boolean":
         res = Boolean
       when "xs:decimal":
-        res = Float
+        res = XSDFloat
       when "xs:float":
-        res = Float
+        res = XSDFloat
       when "xs:double":
-        res = Float
+        res = XSDFloat
       when "xs:duration":
       when "xs:dateTime":
       when "xs:date":
@@ -92,31 +92,31 @@ class Parser
       when "xs:ENTITY"
       when "xs:ENTITIES"
       when "xs:integer"
-         res = Integer
+         res = XSDInteger
       when "xs:nonPositiveInteger"
-         res = Integer
+         res = XSDInteger
       when "xs:negativeInteger"
-         res = Integer
+         res = XSDInteger
       when "xs:long"
-         res = Integer
+         res = XSDInteger
       when "xs:int"
-         res = Integer
+         res = XSDInteger
       when "xs:short"
-         res = Integer
+         res = XSDInteger
       when "xs:byte"
          res = Char
       when "xs:nonNegativeInteger"
-         res = Integer
+         res = XSDInteger
       when "xs:unsignedLong"
-         res = Integer
+         res = XSDInteger
       when "xs:unsignedInt"
-         res = Integer
+         res = XSDInteger
       when "xs:unsignedShort"
-         res = Integer
+         res = XSDInteger
       when "xs:unsignedByte"
          res = Char
       when "xs:positiveInteger"
-         res = Integer
+         res = XSDInteger
     end
 
     return res

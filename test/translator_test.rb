@@ -36,8 +36,8 @@ class TranslatorTest < Test::Unit::TestCase
      assert tags.has_key?("Kaboom")
      assert tags.has_key?("Foomanchu")
      assert tags.has_key?("MoMoney")
-     assert tags.has_key?("my_s")
-     assert tags.has_key?("my_a")
+     assert tags.has_key?("MoMoney:my_s")
+     assert tags.has_key?("MoMoney:my_a")
      assert !tags["Kaboom"].nil?
   end
 
@@ -48,7 +48,7 @@ class TranslatorTest < Test::Unit::TestCase
      schema = Parser.parse_xsd :raw => @data
      classes = schema.to :ruby_classes
      assert_equal 6, classes.size
-     assert classes.include?(Float)
+     assert classes.include?(XSDFloat)
      assert classes.include?(Array)
      assert classes.include?(String)
      assert classes.include?(Boolean)
@@ -65,7 +65,7 @@ class TranslatorTest < Test::Unit::TestCase
      schema = Parser.parse_xsd :raw => @data
      classes = schema.to :ruby_definitions
      assert_equal 6, classes.size
-     assert classes.include?("class Float\nend")
+     assert classes.include?("class XSDFloat\nend")
      assert classes.include?("class Array\nend")
      assert classes.include?("class String\nend")
      assert classes.include?("class Boolean\nend")

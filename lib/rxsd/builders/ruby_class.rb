@@ -11,11 +11,17 @@ class RubyClassBuilder < ClassBuilder
 
    # implementation of RXSD::ClassBuilder::build
    def build
-      # if builtin, just return it
-      return @klass if  Parser.is_builtin? @klass
+      # return if already built
+      return @klass unless @klass.nil?
 
       # need the class name to build class
       return nil    if @klass_name.nil?
+
+      # return if we can find constant corresponding to class name
+      if Object.constants.include? @klass_name
+        @klass = @klass_name.constantize
+        return @klass
+      end
 
       Logger.debug "building class #{@klass}/#{@klass_name} from xsd"
 
@@ -29,18 +35,23 @@ class RubyClassBuilder < ClassBuilder
         superclass = @base_builder.klass
       end
 
-      # create object
-      unless Object.constants.include? @klass_name
-        Object.const_set(@klass_name, Class.new(superclass))
-      end
+      # create class
+      Object.const_set(@klass_name, Class.new(superclass))
       @klass = @klass_name.constantize
 
       # FIXME should only do this if the klass corresponds to a simple type
       @klass.class_method :from_s do |str|
-         new(:superclass_value => superclass.from_s(str))
+            new(:superclass_value => superclass.from_s(str))
       end
       @klass.send :define_method, :initialize do |*args|
-        super(args[0][:superclass_value]) if args.size > 0 && args[0].has_key?(:superclass_value)
+        args = args.first || Hash.new
+        if !args.nil? && args.has_key?(:superclass_value)
+           if Parser.is_builtin? superclass
+              super(args[:superclass_value])
+           else
+              super(:superclass_value => args[:superclass_value])
+           end
+        end
       end
 
       # define accessors for attributes

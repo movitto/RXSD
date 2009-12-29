@@ -30,15 +30,15 @@ class TypesTest < Test::Unit::TestCase
   end
 
   def test_int_to_from
-     assert_equal 123,  Integer.from_s("123")
+     assert_equal 123,  XSDInteger.from_s("123")
   end
 
   def test_float_to_from
-     assert_equal 4.25,  Float.from_s("4.25")
+     assert_equal 4.25,  XSDFloat.from_s("4.25")
   end
 
   def test_array_to_from
-     arr = Array.from_s "4 9 50 123", Integer
+     arr = Array.from_s "4 9 50 123", XSDInteger
      assert_equal 4, arr.size
      assert arr.include?(4)
      assert arr.include?(9)

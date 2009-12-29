@@ -113,6 +113,18 @@ class Extension
      return @class_builder
   end
 
+  # return all child attributes assocaited w/ extension
+  def child_attributes
+     atts = []
+     atts += @base.child_attributes unless @base.nil? || ![SimpleType, ComplexType].include?(@base.class)
+     atts += @choice.child_attributes unless @choice.nil?
+     atts += @sequence.child_attributes unless @sequence.nil?
+     atts += @group.child_attributes unless @group.nil?
+     @attribute_groups.each { |atg| atts += atg.child_attributes } unless @attribute_groups.nil?
+     @attributes.each { |att| atts.push att } unless @attributes.nil?
+     return atts
+  end
+
 end
 
 end # module XSD

@@ -141,6 +141,19 @@ class Restriction
      return @class_builder
   end
 
+  # return all child attributes assocaited w/ restriction
+  def child_attributes
+     atts = []
+     atts += @base.child_attributes unless @base.nil? || ![SimpleType, ComplexType].include?(@base.class)
+     atts += @sequence.child_attributes  unless @sequence.nil?
+     atts += @choice.child_attributes unless @choice.nil?
+     atts += @group.child_attributes  unless @group.nil?
+     atts += @simple_type.child_attributes unless @simple_type.nil?
+     @attribute_groups.each { |atg| atts += atg.child_attributes } unless @attribute_groups.nil?
+     @attributes.each { |att| atts.push att } unless @attributes.nil?
+     return atts
+  end
+
 
   private
 

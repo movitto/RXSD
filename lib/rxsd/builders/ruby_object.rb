@@ -17,7 +17,7 @@ class RubyObjectBuilder < ObjectBuilder
       klass  = tags[@tag_name].klass
 
       # instantiate the target class
-      if @content.nil?   # not a text based obj, construct normally
+      if @content.nil? # not a text based obj, construct normally
         obj = klass.new
       elsif klass == Array # special case when instantiating arrays, need to specify item type
         obj = klass.from_s @content, tags[@tag_name].associated_builder.klass
@@ -28,13 +28,15 @@ class RubyObjectBuilder < ObjectBuilder
       # go through each attribute, find corresponding class builder, 
       # instantiate, and assign to object
       @attributes.each { |atn, atv|
-        aklass  = tags[atn].klass
-        if aklass == Array # special case when instantiating arrays, need to specify item type
-          val = aklass.from_s atv, tags[atn].associated_builder.klass
-        else
-          val = aklass.from_s atv
+        if tags.has_key? @tag_name + ":" + atn # FIXME how do we want to handle attributes that are not in the schema (eg the else here)
+          aklass  = tags[@tag_name + ":" + atn].klass
+          if aklass == Array # special case when instantiating arrays, need to specify item type
+            val = aklass.from_s atv, tags[@tag_name + ":" + atn].associated_builder.klass
+          else
+            val = aklass.from_s atv
+          end
+          obj.send("#{atn.underscore}=".intern, val)
         end
-        obj.send("#{atn.underscore}=".intern, val)
       }
 
       # instantiate each child using builder and assign to object

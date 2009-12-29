@@ -72,6 +72,14 @@ class SimpleContent
     return @class_builder
   end
 
+  # return all child attributes associated w/ simple content
+  def child_attributes
+     atts = []
+     atts += @restriction.child_attributes unless @restriction.nil?
+     atts += @extension.child_attributes unless @extension.nil?
+     return atts
+  end
+
 end
 
 end # module XSD
