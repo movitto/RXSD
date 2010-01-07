@@ -7,7 +7,9 @@
 # Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
-# Array and String can be instantiated as is
+require 'date'
+
+# Array, String, and DateTime can be instantiated as is
 
 class Array
   def self.from_s(str, item_type)
@@ -29,6 +31,22 @@ class String
 
   def self.from_s(str)
      str
+  end
+end
+
+class DateTime
+  def self.from_s(str)
+     # support parsing date, time, or date time
+     xsd_date_time = nil
+     if !str.index("T").nil?
+       xsd_date_time = "%Y-%m-%dT%H:%M:%S"
+     elsif !str.index("-").nil?
+       xsd_date_time = "%Y-%m-%d"
+     elsif !str.index(":").nil?
+       xsd_date_time = "%H:%M:%S"
+     end
+
+     return DateTime.strptime(str, xsd_date_time)
   end
 end
 

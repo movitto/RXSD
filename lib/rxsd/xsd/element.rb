@@ -59,7 +59,11 @@ class Element
      element.abstract  = node.attrs.has_key?("abstract") ? node.attrs["abstract"].to_b : false
 
      unless node.parent.name == Schema.tag_name
-       element.ref              = node.attrs["ref"]
+       # FIXME ignoring reference namepsace prefix (if any) for now
+       ref = node.attrs["ref"]
+       ref = ref.split(':')[1] if !(ref.nil? || ref.index(":").nil?)
+       element.ref              = ref
+
        element.substitionGroup  = node.attrs["substitionGroup"]
        element.form             = node.attrs.has_key?("form") ? 
                                      node.attrs["form"] :

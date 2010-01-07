@@ -121,7 +121,7 @@ class Extension
      atts += @sequence.child_attributes unless @sequence.nil?
      atts += @group.child_attributes unless @group.nil?
      @attribute_groups.each { |atg| atts += atg.child_attributes } unless @attribute_groups.nil?
-     @attributes.each { |att| atts.push att } unless @attributes.nil?
+     @attributes.each       { |att| atts += att.child_attributes } unless @attributes.nil?
      return atts
   end
 

@@ -20,7 +20,7 @@ class Parser
   def self.parse_xsd(args)
      data = Loader.load(args[:uri]) unless args[:uri].nil?
      data = args[:raw]              unless args[:raw].nil?
-     Logger.debug "parsing following xsd: #{data}" 
+     Logger.debug "parsing xsd"
 
      # FIXME validate against xsd's own xsd
      root_xml_node = XML::Node.factory :backend => :libxml, :xml => data
@@ -37,7 +37,7 @@ class Parser
   def self.parse_xml(args)
      data = Loader.load(args[:uri]) unless args[:uri].nil?
      data = args[:raw]              unless args[:raw].nil?
-     Logger.debug "parsing following xml: #{data}"
+     Logger.debug "parsing xml"
 
      root_xml_node = XML::Node.factory :backend => :libxml, :xml => data
      schema_instance = SchemaInstance.new :builders => SchemaInstance.builders_from_xml(root_xml_node)
@@ -48,7 +48,7 @@ class Parser
 
   # return true is specified class is builtin, else false
   def self.is_builtin?(builtin_class)
-    [Array, String, Boolean, Char, XSDFloat, XSDInteger].include? builtin_class
+    [Array, String, Boolean, Char, DateTime, XSDFloat, XSDInteger].include? builtin_class
   end
 
   # return ruby class corresponding to builting type
@@ -68,7 +68,9 @@ class Parser
         res = XSDFloat
       when "xs:duration":
       when "xs:dateTime":
+        res = DateTime
       when "xs:date":
+        res = DateTime
       when "xs:gYearMonth":
       when "xs:gYear":
       when "xs:gMonthDay":

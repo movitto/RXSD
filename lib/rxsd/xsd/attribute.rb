@@ -53,7 +53,10 @@ class Attribute
      attribute.default  = node.attrs["default"]
      attribute.fixed    = node.attrs["fixed"]
 
-     attribute.ref      = node.attrs["ref"]
+     # FIXME ignoring reference namepsace prefix (if any) for now
+     ref = node.attrs["ref"]
+     ref = ref.split(':')[1] if !(ref.nil? || ref.index(":").nil?)
+     attribute.ref              = ref
      
      if node.children.find { |c| c.name == SimpleType.tag_name }.nil?
        attribute.type     = node.attrs["type"]
@@ -102,6 +105,12 @@ class Attribute
      end
 
      return @class_builder
+  end
+
+  # return this attribute (or ref if appropriate) in array
+  def child_attributes
+     return [@ref] unless @ref.nil?
+     return [self]
   end
 
 end

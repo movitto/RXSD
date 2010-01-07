@@ -80,7 +80,7 @@ class AttributeGroup
   def child_attributes
      atts = []
      @attribute_groups.each { |atg| atts += atg.child_attributes } unless @attribute_groups.nil?
-     @attributes.each { |att| atts.push att } unless @attributes.nil?
+     @attributes.each       { |att| atts += att.child_attributes } unless @attributes.nil?
      return atts
   end
 
