@@ -15,4 +15,10 @@ class LoaderTest < Test::Unit::TestCase
      data = RXSD::Loader.load("file:///tmp/rxsd-test")
      assert_equal "foobar", data
   end
+
+  def test_load_http
+     # uploaded a minimal test to projects.morsi.org
+     data = RXSD::Loader.load("http://projects.morsi.org/rxsd/test-schema1.xsd")
+     assert_equal "foobar\n", data
+  end
 end

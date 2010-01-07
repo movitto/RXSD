@@ -3,7 +3,8 @@
 # Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
-require 'uri' # use uri to parse sources
+require 'uri'      # use uri to parse sources
+require 'net/http' # get http:// based resources
 
 module RXSD
 
@@ -17,6 +18,8 @@ class Loader
     uri = URI.parse(source_uri)
     if uri.scheme == "file"
        data = File.read_all uri.path
+    elsif uri.scheme == "http"
+       data = Net::HTTP.get_response(uri.host, uri.path).body
     # elsif FIXME support other uri types
     end
 
