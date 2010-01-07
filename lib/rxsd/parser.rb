@@ -83,6 +83,7 @@ class Parser
       when "xs:NOTATION":
       when "xs:normalizedString"
       when "xs:token"
+         res = String # FIXME should be a string derived class, eliminating whitespace
       when "xs:language"
       when "xs:NMTOKEN"
       when "xs:NMTOKENS"

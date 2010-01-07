@@ -59,7 +59,7 @@ class List
   def resolve(node_objs)
     unless @itemType.nil?
       builtin = Parser.parse_builtin_type @itemType
-      @itemType = !builtin.nil? ? builtin : node_objs.find { |no| no.class == SimpleType && no.name == @itemType }
+      @itemType = !builtin.nil? ? builtin : node_objs[SimpleType].find { |no| no.name == @itemType }
     end
   end
 

@@ -64,7 +64,7 @@ class Group
   # resolve hanging references given complete xsd node object array
   def resolve(node_objs)
     unless @ref.nil?
-      @ref = node_objs.find { |no| no.class == Group && no.name == @ref }
+      @ref = node_objs[Group].find { |no| no.name == @ref }
     end
   end
 

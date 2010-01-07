@@ -92,17 +92,24 @@ class Element
   # resolve hanging references given complete xsd node object array
   def resolve(node_objs)
     unless @type.nil?
-      builtin = Parser.parse_builtin_type @type
-      @type = !builtin.nil? ? builtin : node_objs.find { |no| (no.class == SimpleType || no.class == ComplexType) && 
-                                                               no.name == @type }
+      builtin  = Parser.parse_builtin_type @type
+      simple   = node_objs[SimpleType].find  { |no| no.name == @type }
+      complex  = node_objs[ComplexType].find { |no| no.name == @type }
+      if !builtin.nil?
+        @type = builtin
+      elsif !simple.nil?
+        @type = simple
+      elsif !complex.nil?
+        @type = complex
+      end
     end
 
     unless @ref.nil?
-      @ref = node_objs.find { |no| no.class == Element && no.name == @ref }
+      @ref = node_objs[Element].find { |no| no.name == @ref }
     end
     
     unless @substitionGroup.nil?
-      @substitutionGroup = node_objs.find { |no| no.class == Element && no.name == @substitionGroup }
+      @substitutionGroup = node_objs[Element].find { |no| no.name == @substitionGroup }
     end
   end
 

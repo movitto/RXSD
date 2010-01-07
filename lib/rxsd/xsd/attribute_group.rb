@@ -55,7 +55,7 @@ class AttributeGroup
   # resolve hanging references given complete xsd node object array
   def resolve(node_objs)
     unless @ref.nil?
-      @ref = node_objs.find { |no| no.class == AttributeGroup && no.name == @ref }
+      @ref = node_objs[AttributeGroup].find { |no| no.name == @ref }
     end
   end
 

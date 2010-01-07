@@ -21,20 +21,22 @@ class Schema
    # An tag is an element or attribute name that can appear in a xml document
    # conforming to the schema
    def tags
-        tags = {}
-        Resolver.
-          node_objects(self).
-          find_all { |no| no.class == Element }.
-          each     { |elem|
-            unless elem.name.nil?
-              tags[elem.name] = elem.to_class_builder
-              eca = elem.child_attributes
-              eca.each { |att|
-                tags[elem.name + ":" + att.name] = att.to_class_builder # prepend element to attribute name to prevent conflicts
-              } unless eca.nil?
-            end
-          }
-        return tags
+        unless defined? @tags
+          @tags = {}
+          Resolver.
+            node_objects(self)[Element].
+            find_all { |no| no.class == Element }.
+            each     { |elem|
+              unless elem.name.nil?
+                @tags[elem.name] = elem.to_class_builder
+                eca = elem.child_attributes
+                eca.each { |att|
+                  @tags[elem.name + ":" + att.name] = att.to_class_builder # prepend element to attribute name to prevent conflicts
+                } unless eca.nil?
+              end
+            }
+        end
+        return @tags
    end
 
    # helper method, return all class builders in/under schema

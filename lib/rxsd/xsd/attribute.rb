@@ -71,11 +71,11 @@ class Attribute
   def resolve(node_objs)
     unless @type.nil?
       builtin = Parser.parse_builtin_type @type
-      @type = !builtin.nil? ? builtin : node_objs.find { |no| no.class == SimpleType && no.name == @type }
+      @type = !builtin.nil? ? builtin : node_objs[SimpleType].find { |no| no.name == @type }
     end
 
     unless @ref.nil?
-      @ref = node_objs.find { |no| no.class == Attribute && no.name == @ref }
+      @ref = node_objs[Attribute].find { |no| no.name == @ref }
     end
   end
 

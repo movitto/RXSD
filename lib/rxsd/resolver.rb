@@ -10,21 +10,26 @@ module RXSD
 # resolves 
 class Resolver
 
-   # return array of node objs for all nodes
+   # return hash of xsd types -> array of type instances for all nodes
    # underneath given node_obj (inclusive)
    def self.node_objects(node_obj, args = {})
       if args.has_key? :node_objs
         node_objs = args[:node_objs]
-      elsif node_obj.nil?
-        node_objs = []
       else
-        node_objs = [node_obj]
+        node_objs = {XSD::Attribute => [], XSD::AttributeGroup => [], XSD::Choice => [],
+                     XSD::ComplexContent => [], XSD::ComplexType => [], XSD::Element => [],
+                     XSD::Extension => [], XSD::Group => [], XSD::List => [], XSD::Restriction => [],
+                     XSD::Schema => [], XSD::Sequence => [], XSD::SimpleContent => [], XSD::SimpleType => []}
+
+        unless node_obj.nil?
+          node_objs[node_obj.class].push node_obj
+        end
       end
 
       unless node_obj.nil?
         node_obj.children.each{ |noc|
-           unless noc.nil? || node_objs.include?(noc)
-             node_objs.push noc 
+           unless noc.nil? || node_objs[noc.class].include?(noc)
+             node_objs[noc.class].push noc
              node_objs = node_objects(noc, :node_objs => node_objs) # might be better to do a breadth first traversal instead?
            end
         }
@@ -36,8 +41,10 @@ class Resolver
    # resolves hanging node relationships for specified schema
    def self.resolve_nodes(schema)
       node_objs = node_objects(schema)
-      node_objs.each { |no|
-         no.resolve(node_objs)
+      node_objs.each { |xsd_class, nobjs|
+         nobjs.each{ |no|
+           no.resolve(node_objs)
+         }
       }
    end
 

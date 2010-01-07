@@ -85,9 +85,16 @@ class Restriction
   # resolve hanging references given complete xsd node object array
   def resolve(node_objs)
     unless @base.nil?
-      builtin = Parser.parse_builtin_type @base
-      @base = !builtin.nil? ? builtin : node_objs.find { |no| (no.class == SimpleType || no.class == ComplexType) &&
-                                                               no.name == @base }
+      builtin  = Parser.parse_builtin_type @base
+      simple   = node_objs[SimpleType].find  { |no| no.name == @base }
+      complex  = node_objs[ComplexType].find { |no| no.name == @base }
+      if !builtin.nil?
+        @base = builtin
+      elsif !simple.nil?
+        @base = simple
+      elsif !complex.nil?
+        @base = complex
+      end
     end
   end
 
