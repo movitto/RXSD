@@ -48,7 +48,7 @@ class Parser
 
   # return true is specified class is builtin, else false
   def self.is_builtin?(builtin_class)
-    [Array, String, Boolean, Char, DateTime, XSDFloat, XSDInteger].include? builtin_class
+    [Array, String, Boolean, Char, Time, XSDFloat, XSDInteger].include? builtin_class
   end
 
   # return ruby class corresponding to builting type
@@ -68,14 +68,19 @@ class Parser
         res = XSDFloat
       when "xs:duration":
       when "xs:dateTime":
-        res = DateTime
+        res = Time
       when "xs:date":
-        res = DateTime
+        res = Time
       when "xs:gYearMonth":
+        res = Time
       when "xs:gYear":
+        res = Time
       when "xs:gMonthDay":
+        res = Time
       when "xs:gDay":
+        res = Time
       when "xs:gMonth":
+        res = Time
       when "xs:hexBinary":
       when "xs:base64Binary":
       when "xs:anyURI":

@@ -22,8 +22,8 @@ end
 
 task :dist do
   desc "Create a source tarball"
-  system "mkdir ruby-rxsd-0.1.0 && \
-          cp -R conf/ bin/ db/ lib/ test/ ruby-rxsd-0.1.0/ && \
-          tar czvf rxsd.tgz ruby-rxsd-0.1.0 && \
-          rm -rf ruby-rxsd-0.1.0"
+  system "mkdir ruby-rxsd-0.2.0 && \
+          cp -R conf/ bin/ db/ lib/ test/ ruby-rxsd-0.2.0/ && \
+          tar czvf rxsd.tgz ruby-rxsd-0.2.0 && \
+          rm -rf ruby-rxsd-0.2.0"
 end

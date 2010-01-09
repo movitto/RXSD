@@ -3,15 +3,20 @@
 # Here we add some functionality to some basic
 # Ruby types and define some of our own.
 #
+# Each type must be able to be instantiated with
+# no arguments as well as from a string string parameter
+# (exception is made in the case of Array)
 #
 # Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 require 'date'
 
-# Array, String, and DateTime can be instantiated as is
+# Array, String, Time can be instantiated as is
 
 class Array
+  # arrays take addition parameter when instantiating from
+  # string, the item type which to instantiate array elements w/
   def self.from_s(str, item_type)
      arr = []
      str.split.each { |i|
@@ -34,19 +39,9 @@ class String
   end
 end
 
-class DateTime
+class Time
   def self.from_s(str)
-     # support parsing date, time, or date time
-     xsd_date_time = nil
-     if !str.index("T").nil?
-       xsd_date_time = "%Y-%m-%dT%H:%M:%S"
-     elsif !str.index("-").nil?
-       xsd_date_time = "%Y-%m-%d"
-     elsif !str.index(":").nil?
-       xsd_date_time = "%H:%M:%S"
-     end
-
-     return DateTime.strptime(str, xsd_date_time)
+     return Time.parse(str)
   end
 end
 
