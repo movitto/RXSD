@@ -99,15 +99,15 @@ class Restriction
   end
 
   # convert restriction to class builder
-  def to_class_builder
+  def to_class_builder(cb = nil)
      unless defined? @class_builder
+       @class_builder = cb.nil? ? ClassBuilder.new : cb
+
        # convert restriction to builder 
        if Parser.is_builtin? @base
-         @class_builder= ClassBuilder.new :base => @base
+         @class_builder.base = @base
        elsif !@base.nil?
-         @class_builder= ClassBuilder.new :base_builder => @base.to_class_builder
-       else
-         @class_builder= ClassBuilder.new
+         @class_builder.base_builder = @base.to_class_builder
        end
 
        unless @group.nil?

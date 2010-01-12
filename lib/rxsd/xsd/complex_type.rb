@@ -74,14 +74,14 @@ class ComplexType
   def to_class_builder
     unless defined? @class_builder
       # dispatch to simple / complex content to get class builder
-      @class_builder = nil
+      @class_builder = ClassBuilder.new
 
       if !@simple_content.nil?
-         @class_builder = @simple_content.to_class_builder
+         @simple_content.to_class_builder(@class_builder)
       elsif !@complex_content.nil?
-         @class_builder = @complex_content.to_class_builder
-      else
-         @class_builder = ClassBuilder.new
+         @complex_content.to_class_builder(@class_builder)
+      #else
+         #@class_builder = ClassBuilder.new
       end
 
       @class_builder.klass_name = @name.camelize unless @name.nil?

@@ -87,6 +87,7 @@ class SchemaInstance
   # Optionally specify parent ObjectBuilder to use
   def self.builders_from_xml(node, parent = nil)
      node_builder = ObjectBuilder.new(:tag_name => node.name, :attributes => node.attrs, :parent => parent)
+     parent.children.push node_builder unless parent.nil? || parent.children.include?(node_builder)
      builders = [ node_builder ]
      node.children.each { |c|
         if c.text?

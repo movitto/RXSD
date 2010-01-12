@@ -10,6 +10,9 @@ class RubyObjectBuilder < ObjectBuilder
 
    # implementation of RXSD::ObjectBuilder::build
    def build(schema)
+      # return object if already built
+      return @obj unless @obj.nil?
+      
       Logger.debug "instantiating class #{@tag_name} from xsd"
 
       # find class builder corresponding to tag_name to instantiate
@@ -18,11 +21,11 @@ class RubyObjectBuilder < ObjectBuilder
 
       # instantiate the target class
       if @content.nil? # not a text based obj, construct normally
-        obj = klass.new
+        @obj = klass.new
       elsif klass == Array # special case when instantiating arrays, need to specify item type
-        obj = klass.from_s @content, tags[@tag_name].associated_builder.klass
+        @obj = klass.from_s @content, tags[@tag_name].associated_builder.klass
       else
-        obj = klass.from_s @content
+        @obj = klass.from_s @content
       end
 
       # go through each attribute, find corresponding class builder, 
@@ -35,7 +38,7 @@ class RubyObjectBuilder < ObjectBuilder
           else
             val = aklass.from_s atv
           end
-          obj.send("#{atn.underscore}=".intern, val)
+          @obj.send("#{atn.underscore}=".intern, val)
         end
       }
 
@@ -43,12 +46,12 @@ class RubyObjectBuilder < ObjectBuilder
       @children.each { |child|
         cob  = RubyObjectBuilder.new(:builder => child)
         cobj = cob.build(schema)
-        obj.send("#{cob.tag_name.underscore}=".intern, cobj)
+        @obj.send("#{cob.tag_name.underscore}=".intern, cobj)
       }
 
       Logger.debug "object type #{@tag_name} instantiated, returning"
 
-      return obj
+      return @obj
    end
 
 end

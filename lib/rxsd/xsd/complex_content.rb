@@ -58,15 +58,15 @@ class ComplexContent
   end
 
   # convert complex content to class builder
-  def to_class_builder
+  def to_class_builder(cb = nil)
     unless defined? @class_builder
       # dispatch to child restriction/extension
-      @class_builder = nil
+      @class_builder = cb
 
       if !@restriction.nil?
-         @class_builder = @restriction.to_class_builder
+         @class_builder = @restriction.to_class_builder(@class_builder)
       elsif !@extension.nil?
-         @class_builder = @extension.to_class_builder
+         @class_builder = @extension.to_class_builder(@class_builder)
       end
     end
 

@@ -20,7 +20,7 @@ class ClassBuilder
 
    # class builder corresponding to base type where approprate
    attr_accessor :base_builder
-   
+
    # array of class builders for all attributes
    attr_accessor :attribute_builders
 
@@ -50,6 +50,11 @@ class ClassBuilder
         @attribute_builders = []
 
       end
+   end
+
+   # helper method
+   def base=(base)
+     @base_builder = ClassBuilder.new :klass => base
    end
 
    # perform a deep copy of builder, takes optional recursive guard
@@ -107,6 +112,9 @@ class ObjectBuilder
    # that constructed class is a text based type, for verification purposes
    attr_accessor :content
 
+   # actual object built
+   attr_accessor :obj
+
    # hash of attribute names / values to assign to class instance attributes
    attr_accessor :attributes
 
@@ -121,6 +129,7 @@ class ObjectBuilder
       if args.has_key? :builder
         @tag_name           = args[:builder].tag_name
         @content            = args[:builder].content
+        @obj                = args[:builder].obj
         @attributes         = args[:builder].attributes
         @children           = args[:builder].children
         @parent             = args[:builder].parent
@@ -128,6 +137,7 @@ class ObjectBuilder
       else
         @tag_name   = args[:tag_name]
         @content    = args[:content]
+        @obj        = args[:obj]
         @attributes = args[:attributes]
         @children   = args[:children]
         @parent     = args[:parent]
@@ -136,7 +146,6 @@ class ObjectBuilder
 
       @children = [] if @children.nil?
       @attributes = [] if @attributes.nil?
-      #@parent.children.push self unless @parent.nil? || @parent.children.include?(self)
    end
 
    # subclasses must implement build method to
