@@ -1,6 +1,6 @@
 # The XSD ComplexType definition
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 module RXSD
@@ -33,7 +33,8 @@ class ComplexType
 
   # returns array of all children
   def children
-    (@attributes + @attribute_groups).push(@simple_content).push(@complex_content).push(@choice).push(@group).push(@sequence)
+    (@attributes + @attribute_groups).push(@simple_content).
+    push(@complex_content).push(@choice).push(@group).push(@sequence)
   end
 
   # node passed in should be a xml node representing the complex type

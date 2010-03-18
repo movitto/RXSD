@@ -1,6 +1,6 @@
 # The XSD Element definition
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 module RXSD
@@ -13,7 +13,7 @@ class Element
   # element attribute values
   attr_accessor :id, :name, :type, 
                 :nillable, :abstract, :ref, 
-                :substitionGroup, :form, :maxOccurs,
+                :substitutionGroup, :form, :maxOccurs,
                  :minOccurs, :default, :fixed
 
   # simple type in element
@@ -64,7 +64,7 @@ class Element
        ref = ref.split(':')[1] if !(ref.nil? || ref.index(":").nil?)
        element.ref              = ref
 
-       element.substitionGroup  = node.attrs["substitionGroup"]
+       element.substitutionGroup  = node.attrs["substitutionGroup"]
        element.form             = node.attrs.has_key?("form") ? 
                                      node.attrs["form"] :
                                       node.root.attrs["elementFormDefault"]
@@ -108,8 +108,8 @@ class Element
       @ref = node_objs[Element].find { |no| no.name == @ref }
     end
     
-    unless @substitionGroup.nil?
-      @substitutionGroup = node_objs[Element].find { |no| no.name == @substitionGroup }
+    unless @substitutionGroup.nil?
+      @substitutionGroup = node_objs[Element].find { |no| no.name == @substitutionGroup }
     end
   end
 

@@ -1,11 +1,11 @@
 # RXSD Ruby Class builder
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 module RXSD
 
-# Implements the RXSD::ClassBuilder interface to build Ruby Classes from xsd
+# Implements the RXSD::ClassBuilder interface to build Ruby Classes from a xsd schema
 class RubyClassBuilder < ClassBuilder
 
 

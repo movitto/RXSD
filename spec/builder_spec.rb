@@ -1,18 +1,75 @@
 # tests the builder module
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
-class BuilderTest < Test::Unit::TestCase
-  def setup
+require File.dirname(__FILE__) + '/spec_helper'
+
+describe "Builder" do
+
+  # test to_class_builder method on all XSD classes
+
+  it "should return schema class builders" do
+    schema = Schema.new
+    elem1  = MockXSDEntity.new
+    elem2  = MockXSDEntity.new
+
+    schema.elements = [elem1, elem2]
+    class_builders = schema.to_class_builders
+
+    class_builders.size.should == 2
+    class_builders[0].class.should == ClassBuilder
+    class_builders[0].instance_variable_get("@xsd_obj").should == elem1
+    class_builders[1].class.should == ClassBuilder
+    class_builders[1].instance_variable_get("@xsd_obj").should == elem2
   end
 
-  def teardown
+  it "should return element class builders" do
+    elem1 = MockXSDEntity.new
+    st1   = MockXSDEntity.new
+    ct1   = MockXSDEntity.new
+
+    element = Element.new
+    element.name = "foo_element"
+    element.ref = elem1
+    cb = element.to_class_builder
+    cb.class.should == ClassBuilder
+    cb.instance_variable_get("@xsd_obj").should == elem1
+    cb.klass_name.should == "FooElement"
+
+    # FIXME the next two 'type' test cases need to be fixed / expanded
+    element = Element.new
+    element.name = "bar_element"
+    element.type = st1
+    cb = element.to_class_builder
+    cb.class.should == ClassBuilder
+    #cb.instance_variable_get("@xsd_obj").should == st1     TODO since clone is invoked, @xsd_obj test field never gets copied, fix this
+    cb.klass_name.should == "BarElement"
+
+    element = Element.new
+    element.type = ct1
+    cb = element.to_class_builder
+    cb.class.should == ClassBuilder
+    #cb.instance_variable_get("@xsd_obj").should == ct1
+
+    element = Element.new
+    element.simple_type = st1
+    cb = element.to_class_builder
+    cb.class.should == ClassBuilder
+    cb.instance_variable_get("@xsd_obj").should == st1
+
+    element = Element.new
+    element.complex_type = ct1
+    cb = element.to_class_builder
+    cb.class.should == ClassBuilder
+    cb.instance_variable_get("@xsd_obj").should == ct1
   end
 
-  # FIXME test to_class_builder  method on all XSD classes!
+  # FIXME test other XSD classes' to_class_builder methods
 
-  def test_associated
+  ##########
+
+  it "should correctly return associated builders" do
      gp = ClassBuilder.new
      p  = ClassBuilder.new :base_builder => gp
      c  = ClassBuilder.new :base_builder => p
@@ -24,21 +81,21 @@ class BuilderTest < Test::Unit::TestCase
      c.attribute_builders.push at2
 
      ab = c.associated
-     assert_equal 5, ab.size
+     ab.size.should == 5
   end
 
-  def test_build_class
+  it "should build class" do
      cb1 = RubyClassBuilder.new :klass => String, :klass_name => "Widget"
-     assert_equal String, cb1.build
+     cb1.build.should == String
 
      cb2 = RubyClassBuilder.new :klass_name => "Foobar"
      c2 = cb2.build
-     assert_equal Foobar, c2
-     assert_equal Object, c2.superclass
+     c2.should == Foobar
+     c2.superclass.should == Object
 
      acb = RubyClassBuilder.new :klass => Array, :klass_name => "ArrSocket", :associated_builder => cb1
      ac = acb.build
-     assert_equal Array, ac
+     ac.should == Array
 
      tcb = RubyClassBuilder.new :klass_name => "CamelCased"
 
@@ -47,34 +104,34 @@ class BuilderTest < Test::Unit::TestCase
      cb3.attribute_builders.push tcb
      cb3.attribute_builders.push acb
      c3 = cb3.build
-     assert_equal Foomoney, c3
-     assert_equal Foobar, c3.superclass
+     c3.should == Foomoney
+     c3.superclass.should == Foobar
      c3i = c3.new
-     assert ! c3i.method(:widget).nil?
-     assert_equal 0,  c3i.method(:widget).arity
-     assert ! c3i.method(:widget=).nil?
-     assert_equal 1,  c3i.method(:widget=).arity
-     assert ! c3i.method(:camel_cased).nil?
-     assert_equal 0,  c3i.method(:camel_cased).arity
-     assert ! c3i.method(:camel_cased=).nil?
-     assert_equal 1,  c3i.method(:camel_cased=).arity
-     assert ! c3i.method(:arr_socket).nil?
-     assert_equal 0,  c3i.method(:arr_socket).arity
-     assert ! c3i.method(:arr_socket=).nil?
-     assert_equal 1,  c3i.method(:arr_socket=).arity
+     c3i.method(:widget).should_not be_nil
+     c3i.method(:widget).arity.should == 0
+     c3i.method(:widget=).should_not be_nil
+     c3i.method(:widget=).arity.should == 1
+     c3i.method(:camel_cased).should_not be_nil
+     c3i.method(:camel_cased).arity.should == 0
+     c3i.method(:camel_cased=).should_not be_nil
+     c3i.method(:camel_cased=).arity.should == 1
+     c3i.method(:arr_socket).should_not be_nil
+     c3i.method(:arr_socket).arity.should == 0
+     c3i.method(:arr_socket=).should_not be_nil
+     c3i.method(:arr_socket=).arity.should == 1
   end
 
-  def test_build_definition
+  it "should build definition" do
      cb1 = RubyDefinitionBuilder.new :klass => String, :klass_name => "Widget"
-     assert_equal "class String\nend", cb1.build
+     cb1.build.should == "class String\nend"
 
      cb2 = RubyDefinitionBuilder.new :klass_name => "Foobar"
      d2 = cb2.build
-     assert_equal "class Foobar < Object\nend", d2
+     d2.should == "class Foobar < Object\nend"
 
      acb = RubyDefinitionBuilder.new :klass => Array, :klass_name => "ArrSocket", :associated_builder => cb1
      ad = acb.build
-     assert_equal "class Array\nend", ad
+     ad.should == "class Array\nend"
 
      tcb = RubyDefinitionBuilder.new :klass_name => "CamelCased"
 
@@ -83,14 +140,14 @@ class BuilderTest < Test::Unit::TestCase
      cb3.attribute_builders.push tcb
      cb3.attribute_builders.push acb
      d3 = cb3.build
-     assert_equal "class Foomoney < Foobar\n" +
+     d3.should == "class Foomoney < Foobar\n" +
                   "attr_accessor :widget\n" +
                   "attr_accessor :camel_cased\n" +
                   "attr_accessor :arr_socket\n" +
-                  "end", d3
+                  "end"
   end
 
-  def test_build_object
+  it "should build object" do
      schema_data = "<schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>" +
                    "<xs:element name='Godzilla'>" +
                      "<xs:complexType>" +
@@ -110,10 +167,10 @@ class BuilderTest < Test::Unit::TestCase
      rob = RubyObjectBuilder.new :tag_name => "Godzilla", :content => "some stuff", :attributes => { "first_attr" => "first_val", "SecondAttr" => "420" }
      obj = rob.build schema
 
-     assert_equal Godzilla, obj.class
-     assert_equal "some stuff", obj # since obj derives from string
-     assert_equal "first_val", obj.first_attr
-     assert_equal 420, obj.second_attr
+     obj.class.should == Godzilla
+     obj.should == "some stuff"  # since obj derives from string
+     obj.first_attr.should == "first_val"
+     obj.second_attr.should == 420
 
 
      schema_data = "<schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>" +
@@ -149,11 +206,19 @@ class BuilderTest < Test::Unit::TestCase
 
      obj = rob.build schema
 
-     assert_equal Employee, obj.class
-     assert_equal "111-22-3333", obj.ssn
-     assert_equal "citizen", obj.residency
-     assert_equal "mo", obj.firstname
-     assert_equal "morsi", obj.lastname
-     assert_equal "USA", obj.country
+     obj.class.should == Employee
+     obj.ssn.should == "111-22-3333"
+     obj.residency.should == "citizen"
+     obj.firstname.should == "mo"
+     obj.lastname.should == "morsi"
+     obj.country.should == "USA"
+  end
+end
+
+class MockXSDEntity
+  def to_class_builder
+     cb = ClassBuilder.new
+     cb.instance_variable_set("@xsd_obj", self)
+     return cb
   end
 end

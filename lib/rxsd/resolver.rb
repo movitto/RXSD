@@ -2,12 +2,12 @@
 #
 # resolves hanging node relationships and provides overall node access
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 module RXSD
 
-# resolves 
+# Resolves xsd relationships, used internally
 class Resolver
 
    # return hash of xsd types -> array of type instances for all nodes

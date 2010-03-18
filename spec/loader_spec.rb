@@ -1,24 +1,22 @@
 # tests the loader module
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
-class LoaderTest < Test::Unit::TestCase
-  def setup
-  end
+require File.dirname(__FILE__) + '/spec_helper'
 
-  def teardown
-  end
+describe "Loader" do
 
-  def test_load_file
+  it "should load file" do
      File.write("/tmp/rxsd-test", "foobar")
      data = RXSD::Loader.load("file:///tmp/rxsd-test")
-     assert_equal "foobar", data
+     data.should == "foobar"
   end
 
-  def test_load_http
+  it "should load http uri" do
      # uploaded a minimal test to projects.morsi.org
      data = RXSD::Loader.load("http://projects.morsi.org/rxsd/test-schema1.xsd")
-     assert_equal "foobar\n", data
+     data.should == "foobar\n"
   end
+
 end

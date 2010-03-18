@@ -1,11 +1,11 @@
 # xml / xsd parsers
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 module RXSD
 
-# provides class methods to parse xsd and xml data
+# Provides class methods to parse xsd and xml data
 class Parser
  private
   def initialize
@@ -13,10 +13,10 @@ class Parser
 
  public
 
-  # parse xsd specified by uri or in raw data form into RXSD::XSD::Schema instance
+  # Parse xsd specified by uri or in raw data form into RXSD::XSD::Schema instance
   # args should be a hash w/ optional keys:
-  #   * :uri location which to load resource from
-  #   * :raw raw data which to parse
+  # * :uri location which to load resource from
+  # * :raw raw data which to parse
   def self.parse_xsd(args)
      data = Loader.load(args[:uri]) unless args[:uri].nil?
      data = args[:raw]              unless args[:raw].nil?
@@ -33,7 +33,7 @@ class Parser
      return schema
   end
 
-  # parse xml specified by uri or in raw data form into RXSD::XSD::SchemaInstance instance
+  # Parse xml specified by uri or in raw data form into RXSD::XSD::SchemaInstance instance
   def self.parse_xml(args)
      data = Loader.load(args[:uri]) unless args[:uri].nil?
      data = args[:raw]              unless args[:raw].nil?
@@ -46,12 +46,12 @@ class Parser
      return schema_instance
   end
 
-  # return true is specified class is builtin, else false
+  # Return true is specified class is builtin, else false
   def self.is_builtin?(builtin_class)
     [Array, String, Boolean, Char, Time, XSDFloat, XSDInteger].include? builtin_class
   end
 
-  # return ruby class corresponding to builting type
+  # Return ruby class corresponding to builtin type
   def self.parse_builtin_type(builtin_type_name)
     res = nil
 

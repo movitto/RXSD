@@ -1,6 +1,6 @@
 # Things that don't fit elsewhere
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 # we make use of the activesupport inflector
@@ -10,6 +10,7 @@ require 'active_support'
 require 'logger'
 
 class Logger
+  # Override default logger format
   def format_message(severity, timestamp, progname, msg)
     "#{severity} #{timestamp} (#{$$}) #{msg}\n"
   end

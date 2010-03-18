@@ -2,12 +2,12 @@
 #
 # responsible for providing  interface to build any output format from XSD metadata
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 module RXSD
 
-# base interface and helper methods to build classes in various formats from specified parameters
+# Base interface and helper methods to build classes in various formats from xsd schemas
 class ClassBuilder
    # actual class built
    attr_accessor :klass
@@ -27,8 +27,10 @@ class ClassBuilder
    # name of the attribute which this class represents, for use in accessor construction
    attr_accessor :attribute_name
 
-   # create a new class builder w/ specified args
+   # Create a new class builder w/ specified args. 
    def initialize(args = {})
+      @klass = @klass_name = @attribute_name = @associated_builder = @base_builder = nil
+
       if args.has_key? :builder
         @klass              = args[:builder].klass
         @klass_name         = args[:builder].klass_name
@@ -52,12 +54,13 @@ class ClassBuilder
       end
    end
 
-   # helper method
+   # Set base builder
    def base=(base)
      @base_builder = ClassBuilder.new :klass => base
    end
 
-   # perform a deep copy of builder, takes optional recursive guard
+   # Perform a deep copy of builder. 
+   # cloned param is used internally and should not be set by invoker.
    def clone(cloned = {})
       return cloned[self] if cloned.has_key? self
 
@@ -74,7 +77,7 @@ class ClassBuilder
       return cb
    end
 
-   # helper method to get all associated class builders
+   # Helper method to get all associated class builders
    def associated(builders = [])
        unless @base_builder.nil? || builders.include?(@base_builder)
          builders.push @base_builder
@@ -102,7 +105,7 @@ class ClassBuilder
 
 end # class ClassBuilder
 
-# base interface and helper methods to build objects in various formats from specified parameters
+# Base interface and helper methods to build objects in various formats from specified parameters
 class ObjectBuilder
    # name of class instance to build
    attr_accessor :tag_name
@@ -124,7 +127,7 @@ class ObjectBuilder
    # parent object builder, optionally set
    attr_accessor :parent
 
-   # create a new class builder w/ specified args
+   # Create a new class builder w/ specified args
    def initialize(args = {})
       if args.has_key? :builder
         @tag_name           = args[:builder].tag_name

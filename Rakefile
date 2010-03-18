@@ -1,29 +1,46 @@
 # rxsd project Rakefile
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
-# See COPYING for the License of this software
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
+# Licensed under the LGPLv3+ http://www.gnu.org/licenses/lgpl.txt
 
-#task :default => :test
+require 'rake/rdoctask'
+require 'spec/rake/spectask'
+require 'rake/gempackagetask'
 
-task(:test) do
-   desc "Run tests"
-   require 'test/all_tests'
+
+GEM_NAME="rxsd"
+PKG_VERSION='0.3'
+
+desc "Run all specs"
+Spec::Rake::SpecTask.new('spec') do |t|
+  t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
-task :rdoc do
-  desc "Create RDoc documentation"
-  system "rdoc --title 'rxsd documentation' lib/"
+Rake::RDocTask.new do |rd|
+    rd.main = "README.rdoc"
+    rd.rdoc_dir = "doc/site/api"
+    rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
 end
 
-task :create_gem do
-  desc "Create a new gem"
-  system "gem build rxsd.gemspec"
+PKG_FILES = FileList['bin/**/*', 'lib/**/*.rb', 'COPYING', 'LICENSE', 'Rakefile', 'README.rdoc', 'spec/**/*.rb' ]
+
+SPEC = Gem::Specification.new do |s|
+    s.name = GEM_NAME
+    s.version = PKG_VERSION
+    s.files = PKG_FILES
+
+    s.required_ruby_version = '>= 1.8.1'
+    s.required_rubygems_version = Gem::Requirement.new(">= 1.3.3")
+
+    s.author = "Mohammed Morsi"
+    s.email = "movitto@yahoo.com"
+    s.date = %q{2010-03-18}
+    s.description = %q{A library to translate xsd schemas and xml implementations into ruby classes/objects}
+    s.summary = %q{A library to translate xsd schemas and xml implementations into ruby classes/objects}
+    s.homepage = %q{http://morsi.org/projects/RXSD}
 end
 
-task :dist do
-  desc "Create a source tarball"
-  system "mkdir ruby-rxsd-0.2.0 && \
-          cp -R conf/ bin/ db/ lib/ test/ ruby-rxsd-0.2.0/ && \
-          tar czvf rxsd.tgz ruby-rxsd-0.2.0 && \
-          rm -rf ruby-rxsd-0.2.0"
+Rake::GemPackageTask.new(SPEC) do |pkg|
+    pkg.need_tar = true
+    pkg.need_zip = true
 end

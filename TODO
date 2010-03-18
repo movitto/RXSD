@@ -1,16 +1,10 @@
-RXSD is a work in progress and is not current stable.
+Task list
 
-Various features left to be implemented
-
-  * simple binary to generate file ruby definitions
-  * ruby gem / pkg spec
-  * readme / simple howto (run bin, import lib, add builder/xml-backend)
-  * bug fixing (expanding the test suite in the process)
-  * Support for missing XSD constructs:
+  * more tests, bugfixes, enhancements
+  * Support for missing XSD constructs (complete w/ tests):
      - all / annotation / any / anyAttribute / appInfo / documentation / field /
        import / include / key / keyref / notation / redefine / selector / union / unique
      - add remote uri support to Loader, use in conjunction w/ import/include
   * Additional builtin / native type support
   * Additional builder support
   * Support for ruby class/obj -> xsd/xml
-  * C/C++ rewrite (?)

@@ -1,6 +1,6 @@
 # The XSD Schema definition
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 module RXSD
@@ -40,7 +40,8 @@ class Schema
 
   # returns array of all schema children
   def children
-    ([@elements] + [@simple_types] + [@complex_types] + [@attributes] + [@attribute] + [@attribute_groups] + [@groups]).flatten
+    ([@elements] + [@simple_types] + [@complex_types] + [@attributes] + 
+     [@attribute_groups] + [@groups]).flatten
   end
 
   # node passed in should be a xml root node representing the schema

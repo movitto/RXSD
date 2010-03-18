@@ -1,6 +1,6 @@
 # RXSD resource loader 
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 require 'uri'      # use uri to parse sources

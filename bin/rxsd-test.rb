@@ -1,14 +1,16 @@
+#!/usr/bin/ruby
 # Simple rxsd test utility
 #
 # Usage rxsd-test.rb uri-to-schema uri-to-xml-instance
 #
-# Copyright (C) 2009 Mohammed Morsi <movitto@yahoo.com>
+# Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
 require 'lib/rxsd'
 
 if ARGV.size < 2
   puts "missing required arguments"
+  puts "usage: rxsd-test xsd_uri xml_uri"
   exit
 end
 
@@ -16,15 +18,6 @@ xsd_uri = ARGV[0]
 xml_uri = ARGV[1]
 
 schema = RXSD::Parser.parse_xsd :uri => xsd_uri
-#def disp_child(obj)
-#  if obj.respond_to? 'children'
-#  puts "#{obj}"
-#    obj.children.each { |c|
-#      disp_child c
-#    }
-#  end
-#end
-#disp_child(schema)
 
 puts "=======Classes======="
 classes = schema.to :ruby_classes
