@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
-# Simple rxsd test utility
+# XSD to Ruby class converted
 #
-# Usage rxsd-test.rb uri-to-schema uri-to-xml-instance
+# Usage xsd_to_ruby xsd_uri output_dir
 #
 # Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
@@ -11,7 +11,7 @@ require 'lib/rxsd'
 
 if ARGV.size < 2
   puts "missing required arguments"
-  puts "usage: gen_ruby_definitions xsd_uri output_dir"
+  puts "usage: xsd_to_ruby xsd_uri output_dir"
   exit
 end
 

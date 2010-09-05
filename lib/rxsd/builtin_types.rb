@@ -41,7 +41,7 @@ class String
   end
 
   # Helper to convert string to array of specified type.
-  def to_a(args = {})
+  def to_xa(args = {})
      arr = []
      item_type = args[:type]
      delim     = args.has_key?(:delim) ? args[:delim] : ' '

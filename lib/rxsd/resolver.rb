@@ -16,6 +16,7 @@ class Resolver
       if args.has_key? :node_objs
         node_objs = args[:node_objs]
       else
+        # TODO auto generate keys from classes defined under the XSD module
         node_objs = {XSD::Attribute => [], XSD::AttributeGroup => [], XSD::Choice => [],
                      XSD::ComplexContent => [], XSD::ComplexType => [], XSD::Element => [],
                      XSD::Extension => [], XSD::Group => [], XSD::List => [], XSD::Restriction => [],

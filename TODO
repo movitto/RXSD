@@ -1,10 +1,12 @@
 Task list
 
-  * more tests, bugfixes, enhancements
   * Support for missing XSD constructs (complete w/ tests):
      - all / annotation / any / anyAttribute / appInfo / documentation / field /
        import / include / key / keyref / notation / redefine / selector / union / unique
+     - add restrictions semantics
      - add remote uri support to Loader, use in conjunction w/ import/include
-  * Additional builtin / native type support
+  * Complete builtin / native type support
+  * integration testing, test rxsd against many various actual xsd specs / xml impls
+  * more exceptions, logging, tests, bugfixes, enhancements
   * Additional builder support
   * Support for ruby class/obj -> xsd/xml

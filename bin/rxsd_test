@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 # Simple rxsd test utility
 #
-# Usage rxsd-test.rb uri-to-schema uri-to-xml-instance
+# Usage rxsd_test uri-to-schema uri-to-xml-instance
 #
 # Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
@@ -10,7 +10,7 @@ require 'lib/rxsd'
 
 if ARGV.size < 2
   puts "missing required arguments"
-  puts "usage: rxsd-test xsd_uri xml_uri"
+  puts "usage: rxsd_test xsd_uri xml_uri"
   exit
 end
 
