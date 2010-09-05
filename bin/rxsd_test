@@ -6,7 +6,7 @@
 # Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
-require 'lib/rxsd'
+require 'rxsd'
 
 if ARGV.size < 2
   puts "missing required arguments"

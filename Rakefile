@@ -9,7 +9,7 @@ require 'rake/gempackagetask'
 
 
 GEM_NAME="rxsd"
-PKG_VERSION='0.4'
+PKG_VERSION='0.4.1'
 
 desc "Run all specs"
 Spec::Rake::SpecTask.new('spec') do |t|

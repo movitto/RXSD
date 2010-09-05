@@ -7,7 +7,7 @@
 # See COPYING for the License of this software
 
 require 'fileutils'
-require 'lib/rxsd'
+require 'rxsd'
 
 if ARGV.size < 2
   puts "missing required arguments"
