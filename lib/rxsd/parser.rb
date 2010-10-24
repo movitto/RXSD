@@ -56,36 +56,36 @@ class Parser
     res = nil
 
     case builtin_type_name
-      when "xs:string":
+      when "xs:string" then
         res = String
-      when "xs:boolean":
+      when "xs:boolean" then
         res = Boolean
-      when "xs:decimal":
+      when "xs:decimal" then
         res = XSDFloat
-      when "xs:float":
+      when "xs:float" then
         res = XSDFloat
-      when "xs:double":
+      when "xs:double" then
         res = XSDFloat
-      when "xs:duration":
-      when "xs:dateTime":
+      when "xs:duration" then
+      when "xs:dateTime" then
         res = Time
-      when "xs:date":
+      when "xs:date" then
         res = Time
-      when "xs:gYearMonth":
+      when "xs:gYearMonth" then
         res = Time
-      when "xs:gYear":
+      when "xs:gYear" then
         res = Time
-      when "xs:gMonthDay":
+      when "xs:gMonthDay" then
         res = Time
-      when "xs:gDay":
+      when "xs:gDay" then
         res = Time
-      when "xs:gMonth":
+      when "xs:gMonth" then
         res = Time
-      when "xs:hexBinary":
-      when "xs:base64Binary":
-      when "xs:anyURI":
-      when "xs:QName":
-      when "xs:NOTATION":
+      when "xs:hexBinary" then
+      when "xs:base64Binary" then
+      when "xs:anyURI" then
+      when "xs:QName" then
+      when "xs:NOTATION" then
       when "xs:normalizedString"
       when "xs:token"
          res = String # FIXME should be a string derived class, eliminating whitespace
