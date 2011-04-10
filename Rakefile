@@ -9,7 +9,7 @@ require 'rake/gempackagetask'
 
 
 GEM_NAME="rxsd"
-PKG_VERSION='0.4.1'
+PKG_VERSION='0.5.1'
 
 desc "Run all specs"
 Spec::Rake::SpecTask.new('spec') do |t|
@@ -36,9 +36,9 @@ SPEC = Gem::Specification.new do |s|
     s.add_dependency('libxml-ruby', '~> 1.1.4')
     s.add_development_dependency('rspec', '~> 1.3.0')
 
-    s.author = "Mohammed Morsi"
-    s.email = "movitto@yahoo.com"
-    s.date = %q{2010-09-04}
+    s.author = "Mo Morsi"
+    s.email = "mo@morsi.org"
+    s.date = %q{2011-04-10}
     s.description = %q{A library to translate xsd schemas and xml implementations into ruby classes/objects}
     s.summary = %q{A library to translate xsd schemas and xml implementations into ruby classes/objects}
     s.homepage = %q{http://morsi.org/projects/RXSD}
