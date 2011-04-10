@@ -6,7 +6,12 @@
 # Copyright (C) 2010 Mohammed Morsi <movitto@yahoo.com>
 # See COPYING for the License of this software
 
-require 'rxsd'
+begin
+  require 'rxsd'
+rescue LoadError
+  $: << File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib')
+  require 'rxsd'
+end
 
 if ARGV.size < 2
   puts "missing required arguments"
