@@ -36,7 +36,7 @@ class RubyClassBuilder < ClassBuilder
       end
 
       # create class
-      Object.const_set(@klass_name, Class.new(superclass))
+      Object.const_set(@klass_name, Class.new(superclass)) unless Object.const_defined?(@klass_name)
       @klass = @klass_name.constantize
 
       # FIXME should only do this if the klass corresponds to a simple type
