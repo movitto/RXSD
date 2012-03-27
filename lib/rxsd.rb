@@ -18,5 +18,6 @@ require lib + '/rxsd/resolver'
 require lib + '/rxsd/parser'
 require lib + '/rxsd/builder'
 require lib + '/rxsd/translator'
+require 'active_support/inflector'
 
 Dir[lib + '/rxsd/xsd/*.rb'].each { |xsd_module| require xsd_module }
