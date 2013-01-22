@@ -4,7 +4,7 @@
 # See COPYING for the License of this software
 
 # we make use of the activesupport inflector
-require 'active_support'
+require 'active_support/inflector'
 
 # logger support
 require 'logger'
