@@ -4,13 +4,11 @@
 # Licensed under the LGPLv3+ http://www.gnu.org/licenses/lgpl.txt
 
 require 'rdoc/task'
-require 'rspec'
-
-
+require "rspec/core/rake_task"
 
 desc "Run all specs"
-Spec::Rake::SpecTask.new('rspec') do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
+RSpec::Core::RakeTask.new('rspec') do |t|
+  t.pattern = 'spec/**/*_spec.rb'
 end
 
 Rake::RDocTask.new do |rd|
