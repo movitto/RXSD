@@ -4,7 +4,6 @@
 # See COPYING for the License of this software
 
 module RXSD
-
 # Provides class methods to parse xsd and xml data
 class Parser
  private
